@@ -42,10 +42,21 @@ export class App implements OnInit {
   protected readonly title = signal('human-risks-dashboard');
   protected readonly isLoading = signal(true);
 
-  // Data signals
-  protected metricCardData = signal<MetricCardData | null>(null);
-  protected progressCardData = signal<ProgressCardData | null>(null);
-  protected detailedMetricCardData = signal<DetailedMetricCardData | null>(null);
+  // Component arrays - each item represents one instance of the component
+  protected metricCards = signal<MetricCardData[]>([
+    { title: 'Total Risk Events', description: 'Last 30 days', value: '42' }
+  ]);
+
+  protected progressCards = signal<ProgressCardData[]>([
+    { title: 'Compliance Rate', description: 'Current quarter progress', value: '87%' }
+  ]);
+
+  protected detailedMetricCards = signal<DetailedMetricCardData[]>([
+    { title: 'Security Score', description: 'Overall system health', value: '92', progress: '92%' }
+  ]);
+
+  protected horizontalCharts = signal<number[]>([1]); // Just track count
+  protected radarCharts = signal<number[]>([1]); // Just track count
 
   ngOnInit() {
     this.loadDashboardData();
@@ -58,23 +69,11 @@ export class App implements OnInit {
   loadDashboardData() {
     this.isLoading.set(true);
 
-    // Fetch all data in parallel
-    forkJoin({
-      metricCard: this.mockDataService.getMetricCardData(),
-      progressCard: this.mockDataService.getProgressCardData(),
-      detailedMetricCard: this.mockDataService.getDetailedMetricCardData()
-    }).subscribe({
-      next: (data) => {
-        this.metricCardData.set(data.metricCard);
-        this.progressCardData.set(data.progressCard);
-        this.detailedMetricCardData.set(data.detailedMetricCard);
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading dashboard data:', error);
-        this.isLoading.set(false);
-      }
-    });
+    // Simulate loading - in real app, this would fetch from API
+    setTimeout(() => {
+      // Data is already set in the signals, just end loading state
+      this.isLoading.set(false);
+    }, 2000);
   }
 
   /**
@@ -88,5 +87,112 @@ export class App implements OnInit {
       // Reload data to show skeletons again
       this.loadDashboardData();
     }
+  }
+
+  /**
+   * Add a new instance of a component
+   */
+  addComponent(type: 'metric' | 'progress' | 'detailed' | 'horizontal' | 'radar') {
+    switch (type) {
+      case 'metric':
+        const newMetric: MetricCardData = {
+          title: `Metric ${this.metricCards().length + 1}`,
+          description: 'Custom metric description',
+          value: `${Math.floor(Math.random() * 100)}`
+        };
+        this.metricCards.update(cards => [...cards, newMetric]);
+        break;
+
+      case 'progress':
+        const newProgress: ProgressCardData = {
+          title: `Progress ${this.progressCards().length + 1}`,
+          description: 'Custom progress description',
+          value: `${Math.floor(Math.random() * 100)}%`
+        };
+        this.progressCards.update(cards => [...cards, newProgress]);
+        break;
+
+      case 'detailed':
+        const value = Math.floor(Math.random() * 100);
+        const newDetailed: DetailedMetricCardData = {
+          title: `Detailed ${this.detailedMetricCards().length + 1}`,
+          description: 'Custom detailed description',
+          value: `${value}`,
+          progress: `${value}%`
+        };
+        this.detailedMetricCards.update(cards => [...cards, newDetailed]);
+        break;
+
+      case 'horizontal':
+        this.horizontalCharts.update(charts => [...charts, charts.length + 1]);
+        break;
+
+      case 'radar':
+        this.radarCharts.update(charts => [...charts, charts.length + 1]);
+        break;
+    }
+  }
+
+  /**
+   * Remove an instance of a component
+   */
+  removeComponent(type: 'metric' | 'progress' | 'detailed' | 'horizontal' | 'radar', index: number) {
+    switch (type) {
+      case 'metric':
+        this.metricCards.update(cards => cards.filter((_, i) => i !== index));
+        break;
+      case 'progress':
+        this.progressCards.update(cards => cards.filter((_, i) => i !== index));
+        break;
+      case 'detailed':
+        this.detailedMetricCards.update(cards => cards.filter((_, i) => i !== index));
+        break;
+      case 'horizontal':
+        this.horizontalCharts.update(charts => charts.filter((_, i) => i !== index));
+        break;
+      case 'radar':
+        this.radarCharts.update(charts => charts.filter((_, i) => i !== index));
+        break;
+    }
+  }
+
+  /**
+   * Clear all instances of a component type
+   */
+  clearComponent(type: 'metric' | 'progress' | 'detailed' | 'horizontal' | 'radar') {
+    switch (type) {
+      case 'metric':
+        this.metricCards.set([]);
+        break;
+      case 'progress':
+        this.progressCards.set([]);
+        break;
+      case 'detailed':
+        this.detailedMetricCards.set([]);
+        break;
+      case 'horizontal':
+        this.horizontalCharts.set([]);
+        break;
+      case 'radar':
+        this.radarCharts.set([]);
+        break;
+    }
+  }
+
+  /**
+   * Reset to default layout (one of each)
+   */
+  resetToDefault() {
+    this.metricCards.set([
+      { title: 'Total Risk Events', description: 'Last 30 days', value: '42' }
+    ]);
+    this.progressCards.set([
+      { title: 'Compliance Rate', description: 'Current quarter progress', value: '87%' }
+    ]);
+    this.detailedMetricCards.set([
+      { title: 'Security Score', description: 'Overall system health', value: '92', progress: '92%' }
+    ]);
+    this.horizontalCharts.set([1]);
+    this.radarCharts.set([1]);
   }
 }

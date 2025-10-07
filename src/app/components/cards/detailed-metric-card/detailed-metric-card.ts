@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-detailed-metric-card',
@@ -10,4 +10,10 @@ export class DetailedMetricCard {
   @Input() description: string = 'Pellentesque non augue at nequ...';
   @Input() value: string = 'XX';
   @Input() progress: string = '75%';
+  @Input() showDeleteButton: boolean = false;
+  @Output() delete = new EventEmitter<void>();
+
+  onDelete() {
+    this.delete.emit();
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface ChartDataItem {
@@ -16,6 +16,8 @@ interface ChartDataItem {
 export class HorizontalBarChart {
   @Input() title: string = 'Risk Assessment by Department';
   @Input() description: string = 'Overview of risk levels across different departments and teams';
+  @Input() showDeleteButton: boolean = false;
+  @Output() delete = new EventEmitter<void>();
 
   chartData: ChartDataItem[] = [
     { label: 'Engineering', segment1Width: '45%', segment2Width: '30%', segment3Width: '15%' },
@@ -24,4 +26,8 @@ export class HorizontalBarChart {
     { label: 'HR', segment1Width: '40%', segment2Width: '35%', segment3Width: '5%' },
     { label: 'Finance', segment1Width: '55%', segment2Width: '15%', segment3Width: '10%' }
   ];
+
+  onDelete() {
+    this.delete.emit();
+  }
 }
