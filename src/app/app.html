@@ -1,16 +1,60 @@
 <app-welcome-banner name="Tobias" lastLogin="October 7, 2025"></app-welcome-banner>
 
 <div class="p-6">
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-    <app-metric-card title="Metric Card 1" description="Metric Card Description" value="42"></app-metric-card>
-    <app-progress-display-card title="Progress Card 1" description="Progress Card Description"
-      value="100%"></app-progress-display-card>
-    <app-detailed-metric-card title="Detailed Metric Card 1" description="Detailed Metric Card Description" value="100"
-      progress="75%"></app-detailed-metric-card>
+  <!-- Toggle Loading State Button -->
+  <div class="mb-6 flex justify-end">
+    <button (click)="toggleLoading()" [disabled]="isLoading()"
+      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+      @if (isLoading()) {
+      <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+        </path>
+      </svg>
+      <span>Loading Data...</span>
+      } @else {
+      <span>Reload Data</span>
+      }
+    </button>
   </div>
 
+  <!-- Cards Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+    @if (isLoading()) {
+    <app-metric-card-skeleton></app-metric-card-skeleton>
+    <app-progress-display-card-skeleton></app-progress-display-card-skeleton>
+    <app-detailed-metric-card-skeleton></app-detailed-metric-card-skeleton>
+    } @else {
+    @if (metricCardData(); as data) {
+    <app-metric-card [title]="data.title" [description]="data.description" [value]="data.value"></app-metric-card>
+    }
+    @if (progressCardData(); as data) {
+    <app-progress-display-card [title]="data.title" [description]="data.description"
+      [value]="data.value"></app-progress-display-card>
+    }
+    @if (detailedMetricCardData(); as data) {
+    <app-detailed-metric-card [title]="data.title" [description]="data.description" [value]="data.value"
+      [progress]="data.progress"></app-detailed-metric-card>
+    }
+    }
+  </div>
+
+  <!-- Horizontal Bar Chart -->
+  @if (isLoading()) {
+  <app-horizontal-bar-chart-skeleton></app-horizontal-bar-chart-skeleton>
+  } @else {
   <app-horizontal-bar-chart></app-horizontal-bar-chart>
-  <app-radar-chart></app-radar-chart>
+  }
+
+  <!-- Radar Chart -->
+  <div class="mt-6">
+    @if (isLoading()) {
+    <app-radar-chart-skeleton></app-radar-chart-skeleton>
+    } @else {
+    <app-radar-chart></app-radar-chart>
+    }
+  </div>
 </div>
 
 <main
