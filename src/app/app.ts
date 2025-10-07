@@ -5,10 +5,11 @@ import { MetricCard } from './components/cards/metric-card/metric-card';
 import { ProgressDisplayCard } from './components/cards/progress-display-card/progress-display-card';
 import { DetailedMetricCard } from './components/cards/detailed-metric-card/detailed-metric-card';
 import { HorizontalBarChart } from './components/charts/horizontal-bar-chart/horizontal-bar-chart';
+import { RadarChart } from './components/charts/radar-chart/radar-chart';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, WelcomeBanner, MetricCard, ProgressDisplayCard, DetailedMetricCard, HorizontalBarChart],
+  imports: [RouterOutlet, WelcomeBanner, MetricCard, ProgressDisplayCard, DetailedMetricCard, HorizontalBarChart, RadarChart],
   templateUrl: './app.html'
 })
 export class App {
