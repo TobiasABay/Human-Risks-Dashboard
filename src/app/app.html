@@ -82,8 +82,8 @@
     </div>
   </div>
 
-  <!-- Cards Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+  <!-- Unified Grid for Cards and Charts -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     @if (isLoading()) {
     <!-- Show skeletons based on how many components we have -->
     @for (card of metricCards(); track $index) {
@@ -94,6 +94,12 @@
     }
     @for (card of detailedMetricCards(); track $index) {
     <app-detailed-metric-card-skeleton></app-detailed-metric-card-skeleton>
+    }
+    @for (chart of horizontalCharts(); track $index) {
+    <app-horizontal-bar-chart-skeleton></app-horizontal-bar-chart-skeleton>
+    }
+    @for (chart of radarCharts(); track $index) {
+    <app-radar-chart-skeleton></app-radar-chart-skeleton>
     }
     } @else {
     <!-- Metric Cards -->
@@ -116,32 +122,20 @@
       [progress]="card.progress" [showDeleteButton]="true" (delete)="removeComponent('detailed', $index)">
     </app-detailed-metric-card>
     }
-    }
-  </div>
 
-  <!-- Horizontal Bar Charts -->
-  @for (chart of horizontalCharts(); track $index) {
-  <div class="mb-6">
-    @if (isLoading()) {
-    <app-horizontal-bar-chart-skeleton></app-horizontal-bar-chart-skeleton>
-    } @else {
+    <!-- Horizontal Bar Charts -->
+    @for (chart of horizontalCharts(); track $index) {
     <app-horizontal-bar-chart [showDeleteButton]="true" (delete)="removeComponent('horizontal', $index)">
     </app-horizontal-bar-chart>
     }
-  </div>
-  }
 
-  <!-- Radar Charts -->
-  @for (chart of radarCharts(); track $index) {
-  <div class="mb-6">
-    @if (isLoading()) {
-    <app-radar-chart-skeleton></app-radar-chart-skeleton>
-    } @else {
+    <!-- Radar Charts -->
+    @for (chart of radarCharts(); track $index) {
     <app-radar-chart [showDeleteButton]="true" (delete)="removeComponent('radar', $index)">
     </app-radar-chart>
     }
+    }
   </div>
-  }
 </div>
 
 <main
