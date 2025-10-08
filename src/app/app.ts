@@ -41,6 +41,7 @@ export class App implements OnInit {
 
   protected readonly title = signal('human-risks-dashboard');
   protected readonly isLoading = signal(true);
+  protected readonly isDropdownOpen = signal(false);
 
   // Component arrays - each item represents one instance of the component
   protected metricCards = signal<MetricCardData[]>([
@@ -194,5 +195,27 @@ export class App implements OnInit {
     ]);
     this.horizontalCharts.set([1]);
     this.radarCharts.set([1]);
+  }
+
+  /**
+   * Toggle dropdown menu
+   */
+  toggleDropdown() {
+    this.isDropdownOpen.set(!this.isDropdownOpen());
+  }
+
+  /**
+   * Close dropdown menu
+   */
+  closeDropdown() {
+    this.isDropdownOpen.set(false);
+  }
+
+  /**
+   * Add component and close dropdown
+   */
+  addComponentAndClose(type: 'metric' | 'progress' | 'detailed' | 'horizontal' | 'radar') {
+    this.addComponent(type);
+    this.closeDropdown();
   }
 }
